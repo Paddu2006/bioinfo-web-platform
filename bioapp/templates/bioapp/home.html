@@ -1,0 +1,111 @@
+{% extends 'bioapp/base.html' %}
+{% block title %}Bioinfo Platform - Home{% endblock %}
+{% block content %}
+
+<div class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="fas fa-dna me-3"></i>Bioinfo Platform
+        </h1>
+        <p class="lead mb-4">
+            A web-based bioinformatics toolkit built by Padma Shree Jena
+        </p>
+        <a href="/dna/" class="btn btn-primary btn-lg me-3">
+            <i class="fas fa-play me-2"></i>Start Analyzing
+        </a>
+        <a href="/history/" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-history me-2"></i>View History
+        </a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-badge">
+                <div class="stat-number">{{ total_analyses }}</div>
+                <div>DNA Sequences Analyzed</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-badge">
+                <div class="stat-number">{{ total_mutations }}</div>
+                <div>Mutations Detected</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-badge">
+                <div class="stat-number">{{ total_fasta }}</div>
+                <div>FASTA Files Analyzed</div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="fw-bold mb-4">Our Tools</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-dna fa-3x mb-3" style="color:#00d4ff"></i>
+                <h4 class="fw-bold">DNA Analyzer</h4>
+                <p class="text-muted">
+                    Analyze DNA sequences — GC content,
+                    base counts, complement and more
+                </p>
+                <a href="/dna/" class="btn btn-primary">Open Tool</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-virus fa-3x mb-3" style="color:#e91e63"></i>
+                <h4 class="fw-bold">Mutation Detector</h4>
+                <p class="text-muted">
+                    Compare two DNA sequences and detect
+                    SNPs, transitions and transversions
+                </p>
+                <a href="/mutation/" class="btn btn-primary">Open Tool</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-file-code fa-3x mb-3" style="color:#4caf50"></i>
+                <h4 class="fw-bold">FASTA Analyzer</h4>
+                <p class="text-muted">
+                    Parse and analyze FASTA files with
+                    multiple sequences instantly
+                </p>
+                <a href="/fasta/" class="btn btn-primary">Open Tool</a>
+            </div>
+        </div>
+    </div>
+
+    {% if recent %}
+    <h2 class="fw-bold mt-5 mb-4">Recent Analyses</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Sequence</th>
+                    <th>Length</th>
+                    <th>GC%</th>
+                    <th>Interpretation</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in recent %}
+                <tr>
+                    <td>{{ a.id }}</td>
+                    <td><code>{{ a.sequence|slice:":20" }}...</code></td>
+                    <td>{{ a.length }}</td>
+                    <td>{{ a.gc_content }}%</td>
+                    <td>{{ a.interpretation }}</td>
+                    <td>{{ a.created_at|date:"d-m-Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

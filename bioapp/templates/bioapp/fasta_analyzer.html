@@ -1,0 +1,96 @@
+{% extends 'bioapp/base.html' %}
+{% block title %}FASTA Analyzer{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4">
+        <i class="fas fa-file-code me-2" style="color:#4caf50"></i>
+        FASTA Analyzer
+    </h2>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <div class="card p-4 mb-4">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Paste FASTA Content:</label>
+                <textarea name="fasta_text" class="form-control" rows="8"
+                    placeholder=">Sequence_1 Human BRCA1
+ATGCTAGCTAGCATGC
+>Sequence_2 E.coli
+GGCTAGCTAGCTAGCT"
+                    style="font-family:monospace; font-size:0.9rem"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Analyze FASTA
+            </button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="result-card">
+        <h4 class="fw-bold mb-4">FASTA Analysis Results</h4>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.total }}</div>
+                    <div>Total Sequences</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.total_bases }}</div>
+                    <div>Total Bases</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.avg_gc }}%</div>
+                    <div>Average GC Content</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Header</th>
+                        <th>Length</th>
+                        <th>GC%</th>
+                        <th>A</th>
+                        <th>T</th>
+                        <th>G</th>
+                        <th>C</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seq in result.sequences %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ seq.header|slice:":40" }}</td>
+                        <td>{{ seq.length }}</td>
+                        <td>
+                            <span class="badge
+                                {% if seq.gc > 60 %}bg-danger
+                                {% elif seq.gc < 40 %}bg-warning
+                                {% else %}bg-success{% endif %}">
+                                {{ seq.gc }}%
+                            </span>
+                        </td>
+                        <td>{{ seq.a }}</td>
+                        <td>{{ seq.t }}</td>
+                        <td>{{ seq.g }}</td>
+                        <td>{{ seq.c }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

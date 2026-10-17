@@ -1,0 +1,111 @@
+{% extends 'bioapp/base.html' %}
+{% block title %}Analysis History{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4">
+        <i class="fas fa-history me-2"></i>Analysis History
+    </h2>
+
+    <h4 class="fw-bold mt-4 mb-3">DNA Analyses</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Sequence</th>
+                    <th>Length</th>
+                    <th>GC%</th>
+                    <th>Interpretation</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in dna_analyses %}
+                <tr>
+                    <td>{{ a.id }}</td>
+                    <td><code>{{ a.sequence|slice:":25" }}...</code></td>
+                    <td>{{ a.length }}</td>
+                    <td>{{ a.gc_content }}%</td>
+                    <td>{{ a.interpretation }}</td>
+                    <td>{{ a.created_at|date:"d-m-Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No analyses yet!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="fw-bold mb-3">Mutation Detections</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>SNPs</th>
+                    <th>Transitions</th>
+                    <th>Transversions</th>
+                    <th>Mutation Rate</th>
+                    <th>Similarity</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in mutations %}
+                <tr>
+                    <td>{{ m.id }}</td>
+                    <td>{{ m.total_snps }}</td>
+                    <td>{{ m.transitions }}</td>
+                    <td>{{ m.transversions }}</td>
+                    <td>{{ m.mutation_rate }}%</td>
+                    <td>{{ m.similarity }}%</td>
+                    <td>{{ m.created_at|date:"d-m-Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        No mutations detected yet!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="fw-bold mb-3">FASTA Analyses</h4>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Sequences</th>
+                    <th>Total Bases</th>
+                    <th>Avg GC%</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in fasta_analyses %}
+                <tr>
+                    <td>{{ f.id }}</td>
+                    <td>{{ f.total_sequences }}</td>
+                    <td>{{ f.total_bases }}</td>
+                    <td>{{ f.avg_gc }}%</td>
+                    <td>{{ f.created_at|date:"d-m-Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        No FASTA analyses yet!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

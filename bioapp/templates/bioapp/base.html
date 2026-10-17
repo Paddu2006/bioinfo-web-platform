@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bioinfo Platform{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: linear-gradient(135deg, #1a1a2e, #16213e) !important; }
+        .navbar-brand { font-weight: 700; font-size: 1.4rem; color: #00d4ff !important; }
+        .nav-link { color: #ffffff !important; font-weight: 500; }
+        .nav-link:hover { color: #00d4ff !important; }
+        .hero { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+                color: white; padding: 60px 0; }
+        .card { border: none; border-radius: 15px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #0077b6);
+                       border: none; border-radius: 8px; font-weight: 600; }
+        .stat-badge { background: linear-gradient(135deg, #00d4ff, #0077b6);
+                      color: white; border-radius: 10px;
+                      padding: 15px; text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; }
+        textarea { font-family: monospace; border-radius: 10px !important; }
+        .snp-badge { display: inline-block; padding: 3px 8px;
+                     border-radius: 5px; font-size: 0.8rem;
+                     font-weight: 600; margin: 2px; }
+        .transition { background: #cce5ff; color: #004085; }
+        .transversion { background: #f8d7da; color: #721c24; }
+        .result-card { background: white; border-radius: 15px;
+                       padding: 25px; margin-top: 20px;
+                       box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        footer { background: #1a1a2e; color: #aaa;
+                 padding: 20px 0; margin-top: 50px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-dna me-2"></i>Bioinfo Platform
+        </a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/dna/"><i class="fas fa-dna me-1"></i>DNA Analyzer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/mutation/"><i class="fas fa-virus me-1"></i>Mutation Detector</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/fasta/"><i class="fas fa-file-code me-1"></i>FASTA Analyzer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/history/"><i class="fas fa-history me-1"></i>History</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="text-center">
+    <div class="container">
+        <p class="mb-0">
+            Built by <strong style="color:#00d4ff">Padma Shree Jena</strong>
+            | Bioinformatics + Tech | Phase 4 Project 1
+        </p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

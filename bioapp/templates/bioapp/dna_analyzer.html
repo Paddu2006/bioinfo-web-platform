@@ -1,0 +1,73 @@
+{% extends 'bioapp/base.html' %}
+{% block title %}DNA Analyzer{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4">
+        <i class="fas fa-dna me-2" style="color:#4caf50"></i>
+        DNA Analyzer
+    </h2>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <div class="card p-4 mb-4">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Enter DNA Sequence:</label>
+                <textarea name="sequence" class="form-control" rows="5"
+                    placeholder="ATGCTAGCTAGCATGC"
+                    style="font-family:monospace; font-size:0.9rem"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Analyze DNA
+            </button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="result-card">
+        <h4 class="fw-bold mb-4">DNA Analysis Results</h4>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.length }}</div>
+                    <div>Length</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.gc_content }}%</div>
+                    <div>GC Content</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-badge">
+                    <div class="stat-number" style="font-size:1.2rem">{{ result.interpretation }}</div>
+                    <div>Interpretation</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered w-auto mb-4">
+            <thead class="table-dark">
+                <tr><th>A</th><th>T</th><th>G</th><th>C</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ result.a }}</td>
+                    <td>{{ result.t }}</td>
+                    <td>{{ result.g }}</td>
+                    <td>{{ result.c }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Complement:</strong><br><code>{{ result.complement }}</code></p>
+        <p><strong>Reverse Complement:</strong><br><code>{{ result.reverse_complement }}</code></p>
+        <p><strong>RNA (transcription):</strong><br><code>{{ result.rna }}</code></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'bioapp/base.html' %}
+{% block title %}Mutation Detector{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="fw-bold mb-4">
+        <i class="fas fa-virus me-2" style="color:#e91e63"></i>
+        Mutation Detector
+    </h2>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <div class="card p-4 mb-4">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Original Sequence:</label>
+                <textarea name="sequence1" class="form-control" rows="3"
+                    placeholder="e.g. ATGCTAGCTAGCATGC"
+                    style="font-family:monospace"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Mutated Sequence:</label>
+                <textarea name="sequence2" class="form-control" rows="3"
+                    placeholder="e.g. ATGCAAGCTAGCATCC"
+                    style="font-family:monospace"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Detect Mutations
+            </button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="result-card">
+        <h4 class="fw-bold mb-4">Mutation Analysis Results</h4>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.total_snps }}</div>
+                    <div>Total SNPs</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.mutation_rate }}%</div>
+                    <div>Mutation Rate</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.similarity }}%</div>
+                    <div>Similarity</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-badge">
+                    <div class="stat-number">{{ result.transitions }}</div>
+                    <div>Transitions</div>
+                </div>
+            </div>
+        </div>
+
+        {% if result.snps %}
+        <h5 class="fw-bold mb-3">SNP Details:</h5>
+        <div class="mb-3">
+            {% for snp in result.snps %}
+            <span class="snp-badge
+                {% if snp.type == 'Transition' %}transition
+                {% else %}transversion{% endif %}">
+                Pos {{ snp.position }}:
+                {{ snp.original }} → {{ snp.mutated }}
+                ({{ snp.type }})
+            </span>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <canvas id="mutChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr><th>Type</th><th>Count</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Transitions</td>
+                            <td>{{ result.transitions }}</td></tr>
+                        <tr><td>Transversions</td>
+                            <td>{{ result.transversions }}</td></tr>
+                        <tr><td>Total SNPs</td>
+                            <td><strong>{{ result.total_snps }}</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>
+            No mutations detected! Sequences are identical.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+{% if result.snps %}
+<script>
+new Chart(document.getElementById('mutChart').getContext('2d'), {
+    type: 'pie',
+    data: {
+        labels: ['Transitions', 'Transversions'],
+        datasets: [{
+            data: [{{ result.transitions }}, {{ result.transversions }}],
+            backgroundColor: ['#2196F3', '#E91E63'],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'Mutation Types' }
+        }
+    }
+});
+</script>
+{% endif %}
+{% endblock %}
